@@ -10,6 +10,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        input: {
+          DEFAULT: colors.gray[50],
+          focus: colors.blue[50],
+          text: colors.gray[900],
+          ring: colors.blue[600],
+          border: colors.gray[500],
+        },
         button: {
           normal: {
             DEFAULT: colors.gray[100],
