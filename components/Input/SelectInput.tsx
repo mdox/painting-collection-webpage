@@ -13,6 +13,7 @@ export interface SelectInputItem {
 }
 
 interface SelectInputProps {
+  noDeselect?: boolean;
   multi?: boolean;
   items: SelectInputItem[];
   value?: string[];
@@ -96,6 +97,8 @@ const SelectInput = (props: SelectInputProps) => {
         newSelectedKeys = [key];
       }
     } else {
+      if (!props.multi && props.noDeselect) return;
+
       newSelectedKeys = selectedKeys.filter(
         (selectedKey) => selectedKey !== key
       );
@@ -209,7 +212,9 @@ const SelectInput = (props: SelectInputProps) => {
           narrow
           rectangular
           className="w-8"
-          hidden={selectedItems.length === 0}
+          hidden={
+            selectedItems.length === 0 || (!props.multi && props.noDeselect)
+          }
           onClick={deleteKeys}
         >
           <Icon path={mdiCancel} size={0.85}></Icon>
