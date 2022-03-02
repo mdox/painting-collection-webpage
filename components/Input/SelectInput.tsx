@@ -4,7 +4,7 @@ import clsx from "clsx";
 import Button from "components/Button";
 import useModal from "components/Modal";
 import usePopper from "components/Popper";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 export interface SelectInputItem {
@@ -25,23 +25,25 @@ const SelectInput = (props: SelectInputProps) => {
   const [updateDelayed, setUpdateDelayed] = useState(false);
   const [hideRequested, setHideRequested] = useState(false);
 
+  const updateDelayedRef = useRef(updateDelayed);
+  updateDelayedRef.current = updateDelayed;
+  const hideRequestedRef = useRef(hideRequested);
+  hideRequestedRef.current = hideRequested;
+
   const {
     Modal,
     showModal: showMenu,
     hideModal: hideMenu,
   } = useModal({
-    data: updateDelayed,
     hideOnClick: true,
     hideOnEscape: true,
     onHide: (hideType) => {
       if (hideType === "escape") {
         setSelectedKeys(props.value || []);
-      } else if (hideType === "click" && updateDelayed) {
-        setUpdateDelayed(false);
       }
 
-      if (hideRequested) setHideRequested(false);
-      if (updateDelayed) setUpdateDelayed(false);
+      if (hideRequestedRef.current) setHideRequested(false);
+      if (updateDelayedRef.current) setUpdateDelayed(false);
     },
   });
 
@@ -58,7 +60,13 @@ const SelectInput = (props: SelectInputProps) => {
   useEffect(() => {
     if (updateDelayed) return;
 
-    props.onChange?.(selectedKeys);
+    const v = props.value || [];
+    const a = v.filter((key) => !selectedKeys.includes(key)).length !== 0;
+    const b = selectedKeys.filter((key) => !v.includes(key)).length !== 0;
+
+    if (a || b) {
+      props.onChange?.(selectedKeys);
+    }
   }, [selectedKeys, updateDelayed]);
 
   const deleteKey = (key: string) => {
