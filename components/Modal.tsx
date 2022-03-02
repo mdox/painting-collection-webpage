@@ -11,11 +11,10 @@ import usePortal from "react-cool-portal";
 export type ModalHideType = "escape" | "click" | "regular";
 
 export interface ModalOptions {
-  data?: any;
   hideOnClick?: boolean;
   hideOnEscape?: boolean;
-  onHide?(hideType: ModalHideType, data: any): void;
-  onShow?(data: any): void;
+  onHide?(hideType: ModalHideType): void;
+  onShow?(): void;
 }
 
 export interface ModalProps {
@@ -42,7 +41,7 @@ export default function useModal(options: ModalOptions = {}) {
     e.stopPropagation();
     if (!options.hideOnClick) return;
     if (e.currentTarget !== e.target) return;
-    options.onHide?.("click", options.data);
+    options.onHide?.("click");
     hidePortal();
   };
 
@@ -50,7 +49,7 @@ export default function useModal(options: ModalOptions = {}) {
     e.stopPropagation();
     if (!options.hideOnEscape) return;
     if (e.key !== "Escape") return;
-    options.onHide?.("escape", options.data);
+    options.onHide?.("escape");
     hidePortal();
   };
 
@@ -79,18 +78,18 @@ export default function useModal(options: ModalOptions = {}) {
         </Portal>
       );
     },
-    [isPortalShow, options.data]
+    [isPortalShow]
   );
 
   const showModal = () => {
     setShouldFocus(true);
     showPortal();
-    options.onShow?.(options.data);
+    options.onShow?.();
   };
 
   const hideModal = () => {
     hidePortal();
-    options.onHide?.("regular", options.data);
+    options.onHide?.("regular");
   };
 
   const toggleModal = () => {
