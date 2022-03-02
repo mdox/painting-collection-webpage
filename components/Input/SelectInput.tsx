@@ -35,6 +35,7 @@ const SelectInput = (props: SelectInputProps) => {
     Modal,
     showModal: showMenu,
     hideModal: hideMenu,
+    isModalShow: isMenuShow,
   } = useModal({
     hideOnClick: true,
     hideOnEscape: true,
@@ -122,6 +123,7 @@ const SelectInput = (props: SelectInputProps) => {
         "focus-within:bg-input-focus",
         "focus-within:border-input-ring",
         "focus-within:ring-1",
+        isMenuShow && clsx("bg-input-focus", "border-input-ring", "ring-1"),
         props.className
       )}
       tabIndex={0}
