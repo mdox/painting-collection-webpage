@@ -27,8 +27,10 @@ const TestInputPage = () => {
 
   return (
     <div className="prose">
+      <div className="h-screen"></div>
+      <div className="h-screen"></div>
       <SelectInput
-        multi
+        noDeselect
         items={selectInputItems}
         value={selectInputSelectedKeys}
         onChange={(v) => {
@@ -36,6 +38,8 @@ const TestInputPage = () => {
           setSelectInputSelectedKeys(v);
         }}
       ></SelectInput>
+      <div className="h-screen"></div>
+      <div className="h-screen"></div>
       <DateInput onChange={(v) => console.log(v)}></DateInput>
       <NumberInput
         value={numberInputValue}

@@ -132,60 +132,65 @@ const SelectInput = (props: SelectInputProps) => {
         <div
           ref={setPoppper}
           className={clsx(
-            "fixed overflow-hidden",
-            "rounded border shadow outline-none",
+            "fixed pt-1",
             "min-w-[200px]",
             "max-w-full",
-            "max-h-full",
-            "text-base",
-            "text-input-text",
-            "ring-input-ring",
-            "bg-input-focus",
-            "border-input-ring",
-            "ring-1"
+            "max-h-full"
           )}
         >
-          <div className="flex flex-col space-y-2 overflow-y-scroll p-2">
-            {props.items.map((item) => (
-              <label
-                key={item.key}
-                className={clsx(
-                  "flex items-center rounded",
-                  selectedKeys.includes(item.key)
-                    ? "bg-sky-200 shadow"
-                    : "hover:bg-slate-200"
-                )}
-                onClick={() => {
-                  setHideRequested(true);
-                }}
-              >
-                <div
-                  className="flex h-9 w-9 items-center justify-center"
-                  onClick={(e) => {
-                    e.stopPropagation();
-
-                    if (!hideRequested) {
-                      setUpdateDelayed(true);
-                    }
+          <div
+            ref={setPoppper}
+            className={clsx(
+              "overflow-hidden",
+              "rounded border shadow outline-none",
+              "text-base",
+              "text-input-text",
+              "ring-input-ring",
+              "bg-input-focus",
+              "border-input-ring",
+              "ring-1"
+            )}
+          >
+            <div className="flex flex-col space-y-2 overflow-y-scroll p-2">
+              {props.items.map((item) => (
+                <label
+                  key={item.key}
+                  className={clsx(
+                    "flex items-center rounded",
+                    selectedKeys.includes(item.key)
+                      ? "bg-sky-200 shadow"
+                      : "hover:bg-slate-200"
+                  )}
+                  onClick={() => {
+                    setHideRequested(true);
                   }}
                 >
-                  <input
-                    type="checkbox"
-                    checked={selectedKeys.includes(item.key)}
-                    className="h-4 w-4"
-                    onChange={(e) => {
-                      setKeySelection(item.key, e.currentTarget.checked);
-
-                      if (hideRequested) {
-                        setUpdateDelayed(false);
-                        hideMenu();
+                  <div
+                    className="flex h-9 w-9 items-center justify-center"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (!hideRequested) {
+                        setUpdateDelayed(true);
                       }
                     }}
-                  />
-                </div>
-                <span className="text-sm">{item.text}</span>
-              </label>
-            ))}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedKeys.includes(item.key)}
+                      className="h-4 w-4"
+                      onChange={(e) => {
+                        setKeySelection(item.key, e.currentTarget.checked);
+                        if (hideRequested) {
+                          setUpdateDelayed(false);
+                          hideMenu();
+                        }
+                      }}
+                    />
+                  </div>
+                  <span className="text-sm">{item.text}</span>
+                </label>
+              ))}
+            </div>
           </div>
         </div>
       </Modal>
