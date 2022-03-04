@@ -27,8 +27,6 @@ const TestInputPage = () => {
 
   return (
     <div className="prose">
-      <div className="h-screen"></div>
-      <div className="h-screen"></div>
       <SelectInput
         noDeselect
         items={selectInputItems}
@@ -38,8 +36,6 @@ const TestInputPage = () => {
           setSelectInputSelectedKeys(v);
         }}
       ></SelectInput>
-      <div className="h-screen"></div>
-      <div className="h-screen"></div>
       <DateInput onChange={(v) => console.log(v)}></DateInput>
       <NumberInput
         value={numberInputValue}

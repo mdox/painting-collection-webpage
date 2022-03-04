@@ -20,10 +20,8 @@ const TextInput = (props: TextInputProps) => {
         "bg-input",
         "text-input-text",
         "border-input-border",
-        "ring-input-ring",
         "focus-within:bg-input-focus",
-        "focus-within:border-input-ring",
-        "focus-within:ring-1",
+        "focus-within:border-input-border-focus",
         props.className
       )}
       onChange={(e) => props.onChange?.(e.currentTarget.value)}

@@ -15,7 +15,10 @@ module.exports = {
           focus: colors.blue[50],
           text: colors.gray[900],
           ring: colors.blue[600],
-          border: colors.gray[500],
+          border: {
+            DEFAULT: colors.gray[500],
+            focus: colors.blue[600],
+          },
         },
         button: {
           normal: {

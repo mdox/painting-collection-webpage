@@ -4,7 +4,7 @@ import clsx from "clsx";
 import Button from "components/Button";
 import useModal from "components/Modal";
 import usePopper from "components/Popper";
-import { useEffect, useRef, useState } from "react";
+import { KeyboardEventHandler, useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 export interface SelectInputItem {
@@ -30,6 +30,7 @@ const SelectInput = (props: SelectInputProps) => {
   updateDelayedRef.current = updateDelayed;
   const hideRequestedRef = useRef(hideRequested);
   hideRequestedRef.current = hideRequested;
+  const checkboxListRef = useRef<HTMLDivElement>(null);
 
   const {
     Modal,
@@ -108,6 +109,37 @@ const SelectInput = (props: SelectInputProps) => {
     setSelectedKeys(newSelectedKeys);
   };
 
+  const moveCheckboxFocus = (value: string, up: boolean) => {
+    const focusedElement = checkboxListRef.current?.querySelector(
+      `input[value="${value}"]`
+    );
+    const elements = Array.from(
+      checkboxListRef.current?.querySelectorAll(`input[type="checkbox"]`) || []
+    );
+
+    const index = elements.indexOf(focusedElement as Element);
+    const newIndex = index + (up ? -1 : 1);
+
+    if (newIndex < elements.length && newIndex > -1) {
+      const newFocusingElement = elements[newIndex];
+      (newFocusingElement as HTMLElement).focus();
+
+      return true;
+    }
+
+    return false;
+  };
+
+  const handleKeyDownCheckbox: KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+    const moved = moveCheckboxFocus(e.currentTarget.value, e.key === "ArrowUp");
+
+    if (!moved) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   return (
     <div
       ref={setPoppperTarget}
@@ -119,11 +151,9 @@ const SelectInput = (props: SelectInputProps) => {
         "bg-input",
         "text-input-text",
         "border-input-border",
-        "ring-input-ring",
         "focus-within:bg-input-focus",
-        "focus-within:border-input-ring",
-        "focus-within:ring-1",
-        isMenuShow && clsx("bg-input-focus", "border-input-ring", "ring-1"),
+        "focus-within:border-input-border-focus",
+        isMenuShow && clsx("bg-input-focus", "border-input-border-focus"),
         props.className
       )}
       tabIndex={0}
@@ -139,19 +169,19 @@ const SelectInput = (props: SelectInputProps) => {
           )}
         >
           <div
-            ref={setPoppper}
             className={clsx(
               "overflow-hidden",
               "rounded border shadow outline-none",
               "text-base",
               "text-input-text",
-              "ring-input-ring",
               "bg-input-focus",
-              "border-input-ring",
-              "ring-1"
+              "border-input-border-focus"
             )}
           >
-            <div className="flex flex-col space-y-2 overflow-y-scroll p-2">
+            <div
+              ref={checkboxListRef}
+              className="flex flex-col space-y-2 overflow-y-scroll p-2"
+            >
               {props.items.map((item) => (
                 <label
                   key={item.key}
@@ -176,6 +206,7 @@ const SelectInput = (props: SelectInputProps) => {
                   >
                     <input
                       type="checkbox"
+                      value={item.key}
                       checked={selectedKeys.includes(item.key)}
                       className="h-4 w-4"
                       onChange={(e) => {
@@ -185,6 +216,7 @@ const SelectInput = (props: SelectInputProps) => {
                           hideMenu();
                         }
                       }}
+                      onKeyDown={handleKeyDownCheckbox}
                     />
                   </div>
                   <span className="text-sm">{item.text}</span>
